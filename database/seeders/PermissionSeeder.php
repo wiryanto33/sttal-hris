@@ -24,6 +24,9 @@ class PermissionSeeder extends Seeder
             'edit roles',
             'delete roles',
             'view permissions',
+            'create permissions',
+            'edit permissions',
+            'delete permissions',
             'assign roles',
             'manage settings',
             // Tambahkan sesuai kebutuhan aplikasi
