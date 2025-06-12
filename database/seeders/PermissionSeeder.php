@@ -28,7 +28,10 @@ class PermissionSeeder extends Seeder
             'edit permissions',
             'delete permissions',
             'assign roles',
-            'view setings',
+            'view seting',
+            'view tasks',
+            'view departments',
+
             // Tambahkan sesuai kebutuhan aplikasi
         ];
 
@@ -37,7 +40,7 @@ class PermissionSeeder extends Seeder
         }
 
         // Assign semua permission ke role superAdmin
-        $superAdminRole = Role::firstOrCreate(['name' => 'superAdmin']);
-        $superAdminRole->syncPermissions(Permission::all());
+        $superadminRole = Role::firstOrCreate(['name' => 'superadmin']);
+        $superadminRole->syncPermissions(Permission::all());
     }
 }
