@@ -5,11 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\Seting;
 use Illuminate\Http\Request;
 
-class SetingController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+class SetingController extends Controller implements HasMiddleware
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view setings', only: ['index']),
+            new Middleware('permission:edit seings', only: ['edit']),
+            new Middleware('permission:create setings', only: ['create']),
+            new Middleware('permission:delete setings', only: ['destroy']),
+        ];
+    }
+
     public function index()
     {
         $setings = Seting::withCount('presences')->get();

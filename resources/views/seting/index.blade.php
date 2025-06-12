@@ -44,10 +44,12 @@
                         </div>
                     @endif
 
+                    @can('setings create')
+                        <div class="d-flex">
+                            <a href="{{ route('setings.create') }}" class="btn btn-primary mb-3 ms-auto">New Kantor</a>
+                        </div>
+                    @endcan
 
-                    <div class="d-flex">
-                        <a href="{{ route('setings.create') }}" class="btn btn-primary mb-3 ms-auto">New Kantor</a>
-                    </div>
 
                     <table class="table table-striped" id="table1">
                         <thead>
@@ -72,14 +74,19 @@
                                     </td>
 
                                     <td>
-                                        <a href="{{ route('setings.edit', $seting->id) }}" class="btn btn-info btn-sm">View</a>
+                                        @can('setings edit')
+                                            <a href="{{ route('setings.edit', $seting->id) }}"
+                                                class="btn btn-info btn-sm">View</a>
+                                        @endcan
 
-                                        <form action="{{ route('setings.destroy', $seting->id) }}" method="POST"
-                                            style="display: inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                        </form>
+                                        @can('setings delete')
+                                            <form action="{{ route('setings.destroy', $seting->id) }}" method="POST"
+                                                style="display: inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
