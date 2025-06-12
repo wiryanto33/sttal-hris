@@ -71,7 +71,7 @@
 
                                     <td>
                                         @if ($user->userDetail->image == null)
-                                            <x-image-preview src="{{ asset('storage/' . 'avatar.png') }}" />
+                                            <x-image-preview src="{{ asset('mazer/dist/assets/compiled/png/avatar.png') }}" />
                                         @else
                                             <x-image-preview src="{{ asset($user->userDetail?->image) }}" />
                                         @endif

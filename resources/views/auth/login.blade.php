@@ -239,7 +239,7 @@
             <div class="col-lg-7 d-none d-lg-block">
                 <div id="auth-right">
                     <div class="logo-container">
-                        <img src="{{ asset('storage/logo-sttal-kecil.png') }}" alt="STTAL Logo">
+                        <img src="{{ asset('mazer/dist/assets/compiled/png/logo-sttal-kecil.png') }}" alt="STTAL Logo">
                         <h3 class="logo-title">STTAL</h3>
                         <p class="logo-subtitle">Human Resource Information System</p>
                     </div>
