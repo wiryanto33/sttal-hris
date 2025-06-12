@@ -84,7 +84,7 @@ class UserController extends Controller implements HasMiddleware
             'join_date' => 'required|date',
             'phone' => 'nullable|string|max:15',
             'departement_id' => 'required',
-            'role_id' => 'required',
+            'role_id' => 'required|exists:roles,id',
             'status' => 'required|string',
             'salary' => 'required|numeric',
         ]);
@@ -98,6 +98,8 @@ class UserController extends Controller implements HasMiddleware
         $validateDetail['user_id'] = $user->id;
 
         UserDetail::create($validateDetail);
+
+        $user->assignRole(Role::find($request->role_id)->name);
 
         // Create the users
 
