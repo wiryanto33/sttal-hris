@@ -10,6 +10,8 @@ database:
   create_user: true
 commands:
   - "composer install --no-dev --optimize-autoloader"
+  - "composer require spatie/laravel-permission"
+  - "php artisan vendor:publish --all"
   - "php artisan migrate --force"
   - "php artisan key:generate"
   - "php artisan config:cache"
