@@ -16,8 +16,8 @@ class SuperAdminSeeder extends Seeder
      */
     public function run(): void
     {
-        // Buat role superAdmin jika belum ada
-        $role = Role::firstOrCreate(['name' => 'superAdmin']);
+        // Buat role superadmin jika belum ada
+        $role = Role::firstOrCreate(['name' => 'superadmin']);
 
         // Buat user superAdmin
         $user = User::firstOrCreate(
