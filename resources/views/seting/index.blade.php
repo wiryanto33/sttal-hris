@@ -44,7 +44,7 @@
                         </div>
                     @endif
 
-                    @can('setings create')
+                    @can('seting create')
                         <div class="d-flex">
                             <a href="{{ route('setings.create') }}" class="btn btn-primary mb-3 ms-auto">New Kantor</a>
                         </div>
@@ -74,12 +74,12 @@
                                     </td>
 
                                     <td>
-                                        @can('setings edit')
+                                        @can('seting edit')
                                             <a href="{{ route('setings.edit', $seting->id) }}"
                                                 class="btn btn-info btn-sm">View</a>
                                         @endcan
 
-                                        @can('setings delete')
+                                        @can('seting delete')
                                             <form action="{{ route('setings.destroy', $seting->id) }}" method="POST"
                                                 style="display: inline">
                                                 @csrf

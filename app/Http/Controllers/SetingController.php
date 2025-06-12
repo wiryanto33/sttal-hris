@@ -14,10 +14,10 @@ class SetingController extends Controller implements HasMiddleware
     public static function middleware(): array
     {
         return [
-            new Middleware('permission:view setings', only: ['index']),
-            new Middleware('permission:edit seings', only: ['edit']),
-            new Middleware('permission:create setings', only: ['create']),
-            new Middleware('permission:delete setings', only: ['destroy']),
+            new Middleware('permission:view seting', only: ['index']),
+            new Middleware('permission:edit seting', only: ['edit']),
+            new Middleware('permission:create seting', only: ['create']),
+            new Middleware('permission:delete seting', only: ['destroy']),
         ];
     }
 
