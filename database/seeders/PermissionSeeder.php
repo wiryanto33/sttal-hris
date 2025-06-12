@@ -19,18 +19,37 @@ class PermissionSeeder extends Seeder
             'create users',
             'edit users',
             'delete users',
+
             'view roles',
             'create roles',
             'edit roles',
             'delete roles',
+
             'view permissions',
             'create permissions',
             'edit permissions',
             'delete permissions',
+
             'assign roles',
             'view seting',
+            'create seting',
+            'edit seting',
+            'delete seting',
+
             'view tasks',
+            'create tasks',
+            'edit tasks',
+            'delete tasks',
+
             'view departments',
+            'create departments',
+            'edit departments',
+            'delete departments',
+
+            'view payrolls',
+            'create payrolls',
+            'edit payrolls',
+            'delete payrolls',
 
             // Tambahkan sesuai kebutuhan aplikasi
         ];

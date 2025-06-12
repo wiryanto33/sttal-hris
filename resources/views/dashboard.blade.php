@@ -246,7 +246,7 @@
                             <div class="ms-3">
                                 <h5 class="font-bold mb-0">
                                     {{ auth()->user()->name }}
-                                    Posisi:({{ auth()->user()->roles->pluck('name')->implode(', ') }})
+                                    {{-- Posisi:({{ auth()->user()->roles->pluck('name')->implode(', ') }}) --}}
                                 </h5>
                                 <p class="text-muted mb-0">
                                     {{ auth()->user()->email }}
