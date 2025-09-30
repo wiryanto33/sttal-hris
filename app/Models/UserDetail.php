@@ -25,7 +25,7 @@ class UserDetail extends Model
         'departement_id',
         'role_id',
         'status',
-        'salary',
+        
     ];
 
     // Relasi ke User

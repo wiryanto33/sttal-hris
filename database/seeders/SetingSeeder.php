@@ -14,7 +14,7 @@ class SetingSeeder extends Seeder
     public function run(): void
     {
         Seting::create([
-            'name' => 'STTAL',
+            'name' => 'STTAL Surabaya',
             'address' => 'Jl. Merdeka No.123, morokrembangan',
             'latitude' => -7.561055191392689,
             'longitude' => 112.70188092552503,

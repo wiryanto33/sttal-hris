@@ -11,7 +11,7 @@
         <div class="page-title">
             <div class="row">
                 <div class="col-12 col-md-6 order-md-1 order-last">
-                    <h3>Task</h3>
+                    <h3>Penugasan</h3>
                     <p class="text-subtitle text-muted">
                         Tugas yang harus diselesaikan
                     </p>
@@ -44,7 +44,7 @@
                         </div>
                     @endif
 
-                    @can('tasks create')
+                    @can('create tasks')
                         <div class="d-flex">
                             <a href="{{ route('tasks.create') }}" class="btn btn-primary mb-3 ms-auto">New Task</a>
                         </div>
@@ -95,7 +95,6 @@
                                     </td>
 
                                     <td>
-
                                         @if ($task->status == 'pending')
                                             <a href="{{ route('tasks.selesai', $task->id) }}"
                                                 class="btn btn-success btn-sm">Tandai Selesai</a>

@@ -27,7 +27,6 @@ return new class extends Migration
             $table->foreignId('departement_id')->constrained('departements');
             $table->foreignId('role_id')->constrained('roles');
             $table->string('status');
-            $table->decimal('salary', 10, 2);
             $table->timestamps();
             $table->softDeletes();
         });

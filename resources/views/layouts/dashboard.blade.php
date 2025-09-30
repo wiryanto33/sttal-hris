@@ -78,20 +78,22 @@
                             </a>
                         </li>
 
-                        @can('view tasks')
-                            <li class="sidebar-item  {{ request()->routeIs('tasks.index') ? 'active' : '' }} ">
-                                <a href="{{ route('tasks.index') }}" class='sidebar-link'>
-                                    <i class="bi bi-list-task"></i>
-                                    <span>Task</span>
-                                </a>
-                            </li>
-                        @endcan
+
 
                         @can('view users')
                             <li class="sidebar-item {{ request()->routeIs('users.index') ? 'active' : '' }} ">
                                 <a href="{{ route('users.index') }}" class='sidebar-link'>
                                     <i class="bi bi-people-fill"></i>
-                                    <span>Users Profile</span>
+                                    <span>Users</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('view tasks')
+                            <li class="sidebar-item  {{ request()->routeIs('tasks.index') ? 'active' : '' }} ">
+                                <a href="{{ route('tasks.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-list-task"></i>
+                                    <span>Management Tugas</span>
                                 </a>
                             </li>
                         @endcan
@@ -105,29 +107,40 @@
                             </li>
                         @endcan
 
-                        @can('view permissions')
-                            <li class="sidebar-item {{ request()->routeIs('permissions.index') ? 'active' : '' }} ">
-                                <a href="{{ route('permissions.index') }}" class='sidebar-link'>
-                                    <i class="bi bi-tag-fill"></i>
-                                    <span>Permission</span>
+                        @canany(['view permissions', 'view roles'])
+                            <li
+                                class="sidebar-item has-sub {{ request()->routeIs('permissions.*') || request()->routeIs('roles.*') ? 'active' : '' }}">
+                                <a href="#" class="sidebar-link">
+                                    <i class="bi bi-shield-lock-fill"></i>
+                                    <span>Management Hak Akses</span>
                                 </a>
+                                <ul
+                                    class="submenu {{ request()->routeIs('permissions.*') || request()->routeIs('roles.*') ? 'active' : '' }}">
+                                    @can('view roles')
+                                        <li class="submenu-item {{ request()->routeIs('roles.index') ? 'active' : '' }}">
+                                            <a href="{{ route('roles.index') }}">
+                                                <i class="bi bi-person-bounding-box"></i>
+                                                <span>Roles</span>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                    @can('view permissions')
+                                        <li
+                                            class="submenu-item {{ request()->routeIs('permissions.index') ? 'active' : '' }}">
+                                            <a href="{{ route('permissions.index') }}">
+                                                <i class="bi bi-tag-fill"></i>
+                                                <span>Permission</span>
+                                            </a>
+                                        </li>
+                                    @endcan
+                                </ul>
                             </li>
-                        @endcan
-
-                        @can('view roles')
-                            <li class="sidebar-item {{ request()->routeIs('roles.index') ? 'active' : '' }} ">
-                                <a href="{{ route('roles.index') }}" class='sidebar-link'>
-                                    <i class="bi bi-person-bounding-box"></i>
-                                    <span>Roles</span>
-                                </a>
-                            </li>
-                        @endcan
-
+                        @endcanany
 
                         <li class="sidebar-item {{ request()->routeIs('presences.index') ? 'active' : '' }} ">
                             <a href="{{ route('presences.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check-fill"></i>
-                                <span>Presences</span>
+                                <span>Absensi</span>
                             </a>
                         </li>
 
@@ -135,17 +148,7 @@
                             <li class="sidebar-item {{ request()->routeIs('reports.index') ? 'active' : '' }} ">
                                 <a href="{{ route('reports.index') }}" class="sidebar-link">
                                     <i class="bi bi-card-checklist"></i>
-                                    <span>All Presence</span>
-                                </a>
-                            </li>
-                        @endcan
-
-
-                        @can('view payrolls')
-                            <li class="sidebar-item {{ request()->routeIs('payrolls.index') ? 'active' : '' }} ">
-                                <a href="{{ route('payrolls.index') }}" class='sidebar-link'>
-                                    <i class="bi bi-currency-dollar"></i>
-                                    <span>Payroll</span>
+                                    <span>Rekap Absensi</span>
                                 </a>
                             </li>
                         @endcan
@@ -154,7 +157,7 @@
                         <li class="sidebar-item {{ request()->routeIs('leave_requests.*') ? 'active' : '' }}">
                             <a href="{{ route('leave_requests.index') }}" class='sidebar-link'>
                                 <i class="bi bi-shift-fill"></i>
-                                <span>Leave Request</span>
+                                <span>Management Cuti/Izin</span>
                             </a>
                         </li>
 

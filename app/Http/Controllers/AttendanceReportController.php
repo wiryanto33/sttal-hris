@@ -7,8 +7,22 @@ use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
-class AttendanceReportController extends Controller
+use Illuminate\Routing\Controllers\HasMiddleware;
+use Illuminate\Routing\Controllers\Middleware;
+
+
+class AttendanceReportController extends Controller implements HasMiddleware
 {
+
+    public static function middleware(): array
+    {
+        return [
+            new Middleware('permission:view reports', only: ['index']),
+            // new Middleware('permission:edit users', only: ['edit']),
+            // new Middleware('permission:create users', only: ['create']),
+            // new Middleware('permission:delete users', only: ['destroy']),
+        ];
+    }
     public function index(Request $request)
     {
         // Get filter parameters
@@ -35,7 +49,7 @@ class AttendanceReportController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(15);
 
-           
+
 
         // Get users for filter dropdown
         $users = User::select('id', 'name')->orderBy('name')->get();

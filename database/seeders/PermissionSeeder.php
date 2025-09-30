@@ -46,10 +46,7 @@ class PermissionSeeder extends Seeder
             'edit departments',
             'delete departments',
 
-            'view payrolls',
-            'create payrolls',
-            'edit payrolls',
-            'delete payrolls',
+            'view reports'
 
             // Tambahkan sesuai kebutuhan aplikasi
         ];

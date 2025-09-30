@@ -13,14 +13,15 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use App\Models\Task;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return redirect(route('login'));
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', DashboardController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -75,7 +76,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('setings', SetingController::class);
     Route::post('locations/{location}/toggle', [SetingController::class, 'toggle'])->name('locations.toggle');
 
-    Route::resource('payrolls', PayrollController::class);
 
     Route::get('reports', [AttendanceReportController::class, 'index'])->name('reports.index');
 
@@ -83,7 +83,7 @@ Route::middleware('auth')->group(function () {
 
     Route::patch('/leave_requests/{leave_request}/update-status', [LeaveRequestController::class, 'updateStatus'])
         ->name('leave_requests.update_status');
-        
+
     Route::get('leave_requests/rejected/{id}', [LeaveRequestController::class, 'rejected'])->name('leave_requests.rejected');
     Route::get('leave_requests/approved/{id}', [LeaveRequestController::class, 'approved'])->name('leave_requests.approved');
 

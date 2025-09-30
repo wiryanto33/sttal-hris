@@ -5,12 +5,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2>My presences</h2>
+                <h2>Absensi Saya</h2>
 
                 {{-- Check In/Out Section --}}
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5>Today's presences - {{ now()->format('F j, Y') }}</h5>
+                        <h5>Absensi Hari ini - {{ now()->format('F j, Y') }}</h5>
                     </div>
                     <div class="card-body">
                         <div id="presences-status">
@@ -20,7 +20,7 @@
                                         <p><strong>Check In:</strong>
                                             {{ $todayPresence->check_in_time ? $todayPresence->check_in_time->format('H:i:s') : 'Not checked in' }}
                                             @if ($todayPresence->is_late)
-                                                <span class="badge bg-warning">Late</span>
+                                                <span class="badge bg-warning">Terlambat</span>
                                             @endif
                                         </p>
                                     </div>
@@ -43,7 +43,7 @@
                                     </div>
                                 </div>
                             @else
-                                <p>No presences recorded for today.</p>
+                                <p>Tidak ada record absensi hari ini.</p>
                             @endif
                         </div>
 
@@ -51,7 +51,7 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <select id="location-select" class="form-select mb-3">
-                                        <option value="">Select Location</option>
+                                        <option value="">Pilih Lokasi</option>
                                         @foreach ($locations as $location)
                                             <option value="{{ $location->id }}" data-lat="{{ $location->latitude }}"
                                                 data-lng="{{ $location->longitude }}"
@@ -62,7 +62,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <button id="get-location-btn" class="btn btn-info btn-sm">Get My Location</button>
+                                    <button id="get-location-btn" class="btn btn-info btn-sm">Ambil Lokasi Saya</button>
                                     <span id="location-status" class="text-muted ms-2"></span>
                                 </div>
 
@@ -74,7 +74,7 @@
                             @elseif(!$todayPresence->check_out_time)
                                 <button id="check-out-btn" class="btn btn-danger">Check Out</button>
                             @else
-                                <p class="text-muted">You have completed today's presences.</p>
+                                <p class="text-muted">Anda telah melakukan absensi hari ini.</p>
                             @endif
                         </div>
 
@@ -86,7 +86,7 @@
                 {{-- presences History --}}
                 <div class="card">
                     <div class="card-header">
-                        <h5>presences History</h5>
+                        <h5>Riwayat Absensi</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -129,7 +129,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" class="text-center">No presences records found.</td>
+                                            <td colspan="6" class="text-center">Tidak ada riwayat absensi.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>

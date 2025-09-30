@@ -47,7 +47,6 @@ class SuperAdminSeeder extends Seeder
             'departement_id' => 1,
             'role_id' => $role->id,
             'status' => 'active',
-            'salary' => 10000000,
         ]);
 
     }

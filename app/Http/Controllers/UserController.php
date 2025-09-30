@@ -86,7 +86,6 @@ class UserController extends Controller implements HasMiddleware
             'departement_id' => 'required',
             'role_id' => 'required|exists:roles,id',
             'status' => 'required|string',
-            'salary' => 'required|numeric',
         ]);
 
         // Handle image if uploaded
@@ -158,7 +157,6 @@ class UserController extends Controller implements HasMiddleware
             'departement_id' => 'required|exists:departements,id',
             'role' => 'required|exists:roles,name',
             'status' => 'required|string',
-            'salary' => 'required|numeric',
         ]);
 
         if ($validateDetail->fails()) {
@@ -176,7 +174,6 @@ class UserController extends Controller implements HasMiddleware
             'phone',
             'departement_id',
             'status',
-            'salary'
         ]);
 
         if ($request->hasFile('image')) {

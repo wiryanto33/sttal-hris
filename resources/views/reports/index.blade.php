@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <h4 class="page-title">Attendance Reports</h4>
+                <h4 class="page-title">Laporan Absensi</h4>
                 <div class="page-title-right">
                     <ol class="breadcrumb m-0">
                         <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Reports</li>
+                        <li class="breadcrumb-item active">Laporan</li>
                     </ol>
                 </div>
             </div>
@@ -43,7 +43,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Present</span>
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Hadir</span>
                             <h4 class="mb-3 text-success">{{ $summary['present'] }}</h4>
                         </div>
                         <div class="flex-shrink-0">
@@ -63,7 +63,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Absent</span>
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Tidak Hadir</span>
                             <h4 class="mb-3 text-danger">{{ $summary['absent'] }}</h4>
                         </div>
                         <div class="flex-shrink-0">
@@ -83,7 +83,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-grow-1">
-                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Attendance Rate</span>
+                            <span class="text-muted mb-3 lh-1 d-block text-truncate">Absensi Persentase</span>
                             <h4 class="mb-3 text-info">{{ $summary['present_percentage'] }}%</h4>
                         </div>
                         <div class="flex-shrink-0">
@@ -130,9 +130,9 @@
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status">
                                 <option value="">All Status</option>
-                                <option value="present" {{ $status == 'present' ? 'selected' : '' }}>Present</option>
-                                <option value="absent" {{ $status == 'absent' ? 'selected' : '' }}>Absent</option>
-                                <option value="late" {{ $status == 'late' ? 'selected' : '' }}>Late</option>
+                                <option value="present" {{ $status == 'present' ? 'selected' : '' }}>Hadir</option>
+                                <option value="absent" {{ $status == 'absent' ? 'selected' : '' }}>Absen</option>
+                                <option value="late" {{ $status == 'late' ? 'selected' : '' }}>Terlambat</option>
                             </select>
                         </div>
                         <div class="col-12">
@@ -206,11 +206,11 @@
                                         </td>
                                         <td>
                                             @if($presence->status == 'present')
-                                                <span class="badge bg-success">Present</span>
+                                                <span class="badge bg-success">Hadir</span>
                                             @elseif($presence->status == 'absent')
-                                                <span class="badge bg-danger">Absent</span>
+                                                <span class="badge bg-danger">Absen</span>
                                             @elseif($presence->status == 'late')
-                                                <span class="badge bg-warning">Late</span>
+                                                <span class="badge bg-warning">Terlambat</span>
                                             @else
                                                 <span class="badge bg-secondary">{{ ucfirst($presence->status) }}</span>
                                             @endif
@@ -245,7 +245,7 @@
                                         <td colspan="8" class="text-center py-4">
                                             <div class="d-flex flex-column align-items-center">
                                                 <i class="mdi mdi-clipboard-text-outline font-size-48 text-muted mb-2"></i>
-                                                <p class="text-muted mb-0">No attendance records found</p>
+                                                <p class="text-muted mb-0">tidak ada data absensi</p>
                                             </div>
                                         </td>
                                     </tr>

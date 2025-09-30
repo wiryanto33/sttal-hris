@@ -219,19 +219,6 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="" class="form-label">Salary</label>
-                            <input type="number"
-                                class="form-control @error('salary') is-invalid
-                            @enderror"
-                                value="{{ old('salary') }}" name="salary" required>
-                            @error('salary')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
-                            @enderror
-                        </div>
-
-                        <div class="mb-3">
                             <label for="" class="form-label">password</label>
                             <input type="password"
                                 class="form-control @error('password') is-invalid

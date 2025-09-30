@@ -291,19 +291,6 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="" class="form-label">Salary</label>
-                                    <input type="number"
-                                        class="form-control @error('salary') is-invalid
-                                    @enderror"
-                                        value="{{ $user->userDetail->salary }}" name="salary" required>
-                                    @error('salary')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Save Changes</button>
                                 </div>
                             </form>
