@@ -65,8 +65,8 @@
                             @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $user->name }}
-                                        <p>{{ $user->userDetail->pangkat }} {{ $user->userDetail->korps }} NRP
-                                            {{ $user->userDetail->nrp }}</p>
+                                        <p>{{ $user->userDetail->pangkat ?? '-'  }} {{ $user->userDetail->korps ?? '-' }} NRP
+                                            {{ $user->userDetail->nrp ?? '-' }}</p>
                                     </td>
 
                                     <td>
