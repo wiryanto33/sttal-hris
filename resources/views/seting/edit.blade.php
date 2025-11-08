@@ -122,7 +122,7 @@
                             <label for="start_time" class="form-label">Jam Mulai</label>
                             <input type="time" id="start_time"
                                 class="form-control @error('start_time') is-invalid @enderror" name="start_time"
-                                value="{{ old('start_time', $seting->start_time) }}" required>
+                                value="{{ old('start_time', \Carbon\Carbon::parse($seting->start_time)->format('H:i')) }}" required>
                             @error('start_time')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -135,7 +135,7 @@
                             <label for="end_time" class="form-label">Jam Selesai</label>
                             <input type="time" id="end_time"
                                 class="form-control @error('end_time') is-invalid @enderror" name="end_time"
-                                value="{{ old('end_time', $seting->end_time) }}" required>
+                                value="{{ old('end_time', \Carbon\Carbon::parse($seting->end_time)->format('H:i')) }}" required>
                             @error('end_time')
                                 <div class="invalid-feedback">
                                     {{ $message }}

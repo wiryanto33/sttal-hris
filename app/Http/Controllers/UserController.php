@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 
@@ -40,10 +41,10 @@ class UserController extends Controller implements HasMiddleware
 
         if ($user->hasRole('superadmin')) {
             // If the user is a superadmin, show all users
-            $users = User::with('roles')->get(); // Eager load roles
+            $users = User::with(['roles', 'userDetail'])->get(); // Eager load roles and details
         } else {
             // Jika bukan superadmin, tampilkan hanya user yang sedang login
-            $users = User::with('roles')->where('id', $user->id)->get();
+            $users = User::with(['roles', 'userDetail'])->where('id', $user->id)->get();
         }
 
         return view('users.index', compact('users'));
@@ -67,7 +68,7 @@ class UserController extends Controller implements HasMiddleware
         // dd($request->all());
         $validatedUser = $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique('users', 'email')],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -77,15 +78,15 @@ class UserController extends Controller implements HasMiddleware
             'pangkat' => 'required|string|max:255',
             'korps' => 'required|string|max:255',
             'nrp' => 'required|string|max:255|unique:user_details,nrp',
-            'gender' => 'required|string|max:255',
+            'gender' => 'required|in:male,female',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'address' => 'nullable|string|max:255',
+            'address' => 'required|string|max:255',
             'birth_date' => 'required|date',
             'join_date' => 'required|date',
-            'phone' => 'nullable|string|max:15',
-            'departement_id' => 'required',
+            'phone' => 'required|string|max:15',
+            'departement_id' => 'required|exists:departements,id',
             'role_id' => 'required|exists:roles,id',
-            'status' => 'required|string',
+            'status' => 'required|in:active,inactive',
         ]);
 
         // Handle image if uploaded
@@ -127,6 +128,8 @@ class UserController extends Controller implements HasMiddleware
     public function update(Request $request, string $id)
     {
         $user = User::findOrFail($id);
+        $actor = Auth::user();
+        $creatingDetails = $user->userDetail === null;
 
         // Validasi untuk tabel users
         $validateUser = Validator::make($request->all(), [
@@ -144,20 +147,38 @@ class UserController extends Controller implements HasMiddleware
         ]);
 
         // Validasi untuk detail user
-        $validateDetail = Validator::make($request->all(), [
-            'pangkat' => 'required|string|max:255',
-            'korps' => 'required|string|max:255',
-            'nrp' => 'required|string|max:255|unique:user_details,nrp,' . $user->id . ',user_id',
-            'gender' => 'required|string|max:255',
+        $detailRules = [
+            'pangkat' => 'nullable|string|max:255',
+            'korps' => 'nullable|string|max:255',
+            'nrp' => 'nullable|string|max:255|unique:user_details,nrp,' . $user->id . ',user_id',
+            'gender' => 'nullable|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'address' => 'nullable|string|max:255',
-            'birth_date' => 'required|date',
-            'join_date' => 'required|date',
+            'birth_date' => 'nullable|date',
+            'join_date' => 'nullable|date',
             'phone' => 'nullable|string|max:15',
-            'departement_id' => 'required|exists:departements,id',
-            'role' => 'required|exists:roles,name',
-            'status' => 'required|string',
-        ]);
+            'departement_id' => 'nullable|exists:departements,id',
+            // superadmin can skip choosing role
+            'role' => $actor->hasRole('superadmin') ? 'nullable|exists:roles,name' : 'required|exists:roles,name',
+            'status' => $actor->hasRole('superadmin') ? 'required|in:active,inactive' : 'prohibited',
+        ];
+
+        // If creating a new UserDetail record, enforce required fields
+        if ($creatingDetails && !$actor->hasRole('superadmin')) {
+            $detailRules = array_merge($detailRules, [
+                'pangkat' => 'required|string|max:255',
+                'korps' => 'required|string|max:255',
+                'nrp' => 'required|string|max:255|unique:user_details,nrp',
+                'gender' => 'required|in:male,female',
+                'address' => 'required|string|max:255',
+                'birth_date' => 'required|date',
+                'join_date' => 'required|date',
+                'phone' => 'required|string|max:15',
+                'departement_id' => 'required|exists:departements,id',
+            ]);
+        }
+
+        $validateDetail = Validator::make($request->all(), $detailRules);
 
         if ($validateDetail->fails()) {
             return redirect()->back()->withErrors($validateDetail)->withInput();
@@ -173,8 +194,17 @@ class UserController extends Controller implements HasMiddleware
             'join_date',
             'phone',
             'departement_id',
+            // status included conditionally by validation; if prohibited, it won't be present
             'status',
         ]);
+
+        // When creating details, also persist role_id to satisfy DB constraint
+        if ($creatingDetails) {
+            $roleId = \Spatie\Permission\Models\Role::where('name', $request->role)->value('id');
+            if ($roleId) {
+                $data['role_id'] = $roleId;
+            }
+        }
 
         if ($request->hasFile('image')) {
             // Hapus file lama jika ada
@@ -193,12 +223,15 @@ class UserController extends Controller implements HasMiddleware
         if ($user->userDetail) {
             $user->userDetail->update($data);
         } else {
+            // Create only with complete required fields
             $data['user_id'] = $user->id;
             \App\Models\UserDetail::create($data);
         }
 
-        // Update Role menggunakan Spatie
-        $user->syncRoles([$request->role]);
+        // Update Role menggunakan Spatie (only if provided)
+        if ($request->filled('role')) {
+            $user->syncRoles([$request->role]);
+        }
 
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }

@@ -53,7 +53,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-center align-items-center flex-column">
                                 <div class="avatar avatar-2xl">
-                                    @if ($user->userDetail->image == null)
+                                    @if (($user->userDetail?->image ?? null) == null)
                                         <x-image-preview src="{{ asset('storage/' . 'default/avatar.png') }}" />
                                     @else
                                         <x-image-preview src="{{ asset($user->userDetail?->image) }}" />
@@ -61,8 +61,8 @@
                                 </div>
 
                                 <h3 class="mt-3">{{ $user->name }}</h3>
-                                <p class="text-small">{{ $user->userDetail->pangkat }} {{ $user->userDetail->korps }} NRP
-                                    {{ $user->userDetail->nrp }}</p>
+                                <p class="text-small">{{ $user->userDetail?->pangkat }} {{ $user->userDetail?->korps }} NRP
+                                    {{ $user->userDetail?->nrp }}</p>
                             </div>
                         </div>
                     </div>
@@ -125,17 +125,17 @@
                                 <div class="form-group">
                                     <label for="pangkat" class="form-label">Pangkat</label>
                                     <input type="text" name="pangkat" id="pangkat" class="form-control"
-                                        placeholder="Rank" value="{{ $user->userDetail->pangkat }}">
+                                        placeholder="Rank" value="{{ $user->userDetail?->pangkat }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="korps" class="form-label">Korps</label>
                                     <input type="text" name="korps" id="korps" class="form-control"
-                                        placeholder="Corps" value="{{ $user->userDetail->korps }}">
+                                        placeholder="Corps" value="{{ $user->userDetail?->korps }}">
                                 </div>
                                 <div class="form-group">
                                     <label for="nrp" class="form-label">Nrp</label>
                                     <input type="text" name="nrp" id="nrp" class="form-control"
-                                        placeholder="Nrp" value="{{ $user->userDetail->nrp }}">
+                                        placeholder="Nrp" value="{{ $user->userDetail?->nrp }}">
                                 </div>
 
                                 <div class="form-group">
@@ -143,9 +143,9 @@
                                     <select name="gender" id="gender"
                                         class="form-control @error('gender') is-invalid
                                     @enderror">
-                                        <option value="male" @if (old('gender', $user->userDetail->gender) == 'male') selected @endif>Male
+                                        <option value="male" @if (old('gender', $user->userDetail?->gender) == 'male') selected @endif>Male
                                         </option>
-                                        <option value="female" @if (old('gender', $user->userDetail->gender) == 'female') selected @endif>Female
+                                        <option value="female" @if (old('gender', $user->userDetail?->gender) == 'female') selected @endif>Female
                                         </option>
                                     </select>
                                     @error('gender')
@@ -170,7 +170,7 @@
 
                                 <div class="form-group">
                                     <label for="" class="form-label">Address</label>
-                                    <textarea name="address" class="form-control @error('address') is-invalid @enderror"> {{ $user->userDetail->address }}</textarea>
+                                    <textarea name="address" class="form-control @error('address') is-invalid @enderror"> {{ $user->userDetail?->address }}</textarea>
                                     @error('address')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -191,7 +191,7 @@
                                 <div class="form-group">
                                     <label for="" class="form-label">Phone</label>
                                     <input type="text" class="form-control" name="phone"
-                                        value="{{ $user->userDetail->phone }}" required>
+                                        value="{{ $user->userDetail?->phone }}">
                                     @error('phone')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -203,7 +203,7 @@
                                     <input type="date"
                                         class="form-control date @error('birth_date') is-invalid
                                     @enderror"
-                                        value="{{ $user->userDetail->birth_date }}" name="birth_date" required>
+                                        value="{{ $user->userDetail?->birth_date }}" name="birth_date">
                                     @error('birth_date')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -215,7 +215,7 @@
                                     <label for="" class="form-label">Join Date</label>
                                     <input type="date"
                                         class="form-control date @error('join_date') is-invalid @enderror"
-                                        value="{{ $user->userDetail->join_date }}" name="join_date" required>
+                                        value="{{ $user->userDetail?->join_date }}" name="join_date">
                                     @error('join_date')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -230,7 +230,7 @@
                                         <option value="">Select Departement</option>
                                         @foreach ($departements as $departement)
                                             <option value="{{ $departement->id }}"
-                                                @if (old('departement_id', $user->userDetail->departement_id) == $departement->id) selected @endif>{{ $departement->name }}
+                                                @if (old('departement_id', $user->userDetail?->departement_id) == $departement->id) selected @endif>{{ $departement->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -273,22 +273,29 @@
                                 @endif
 
 
-                                <div class="form-group">
-                                    <label for="" class="form-label">Status</label>
-                                    <select name="status" id=""
-                                        class="form-control @error('status') is-invalid
-                                    @enderror">
-                                        <option value="inactive" @if (old('status', $user->userDetail->status) == 'inactive') selected @endif>
-                                            Inactive</option>
-                                        <option value="active" @if (old('status', $user->userDetail->status) == 'active') selected @endif>Active
-                                        </option>
-                                    </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
+                                @if (auth()->user()->hasRole('superadmin'))
+                                    <div class="form-group">
+                                        <label for="status" class="form-label">Status</label>
+                                        <select name="status" id="status"
+                                            class="form-control @error('status') is-invalid @enderror">
+                                            <option value="inactive" @if (old('status', $user->userDetail?->status) == 'inactive') selected @endif>
+                                                Inactive</option>
+                                            <option value="active" @if (old('status', $user->userDetail?->status) == 'active') selected @endif>Active
+                                            </option>
+                                        </select>
+                                        @error('status')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                @else
+                                    <div class="form-group">
+                                        <label for="status_display" class="form-label">Status</label>
+                                        <input type="text" id="status_display" class="form-control" value="{{ $user->userDetail?->status ?? '-' }}" readonly>
+                                        <small class="form-text text-muted">Only superadmin can modify user status.</small>
+                                    </div>
+                                @endif
 
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Save Changes</button>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\UserDetail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,8 +44,20 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Create minimal user details with default DB status ('inactive')
+        try {
+            UserDetail::create([
+                'user_id' => $user->id,
+                // rely on DB default for 'status'
+            ]);
+        } catch (\Throwable $e) {
+            // Swallow silently to not block registration; admin can create details later
+        }
 
-        return redirect(route('dashboard', absolute: false));
+        // Do not auto-login. Require activation first.
+        return redirect()->route('login')->with(
+            'status',
+            __('Akun berhasil dibuat. Menunggu aktivasi oleh administrator.')
+        );
     }
 }

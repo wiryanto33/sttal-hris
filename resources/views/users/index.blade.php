@@ -65,15 +65,18 @@
                             @foreach ($users as $user)
                                 <tr>
                                     <td>{{ $user->name }}
-                                        <p>{{ $user->userDetail->pangkat ?? '-'  }} {{ $user->userDetail->korps ?? '-' }} NRP
-                                            {{ $user->userDetail->nrp ?? '-' }}</p>
+                                        <p>{{ $user->userDetail?->pangkat ?? '-' }} {{ $user->userDetail?->korps ?? '-' }}
+                                            NRP
+                                            {{ $user->userDetail?->nrp ?? '-' }}</p>
                                     </td>
 
                                     <td>
-                                        @if ($user->userDetail->image == null)
-                                            <x-image-preview src="{{ asset('mazer/dist/assets/compiled/png/avatar.png') }}" />
+                                        @php($img = $user->userDetail?->image)
+                                        @if (empty($img))
+                                            <x-image-preview
+                                                src="{{ asset('mazer/dist/assets/compiled/png/avatar.png') }}" />
                                         @else
-                                            <x-image-preview src="{{ asset($user->userDetail?->image) }}" />
+                                            <x-image-preview src="{{ asset($img) }}" />
                                         @endif
                                     </td>
 
@@ -85,10 +88,11 @@
                                         @endforeach
                                     </td>
                                     <td>
-                                        @if ($user->userDetail->status == 'active')
-                                            <span class="badge bg-success">{{ $user->userDetail->status }}</span>
+                                        @php($status = $user->userDetail?->status)
+                                        @if ($status === 'active')
+                                            <span class="badge bg-success">{{ $status }}</span>
                                         @else
-                                            <span class="badge bg-danger">{{ $user->userDetail->status }}</span>
+                                            <span class="badge bg-danger">{{ $status }}</span>
                                         @endif
 
                                     </td>

@@ -49,6 +49,16 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Allow only active users (non-superadmin must be 'active')
+        $user = Auth::user();
+        $status = $user?->userDetail?->status;
+        if (!$user?->hasRole('superadmin') && $status !== 'active') {
+            Auth::logout();
+            throw ValidationException::withMessages([
+                'email' => __('Akun Anda belum aktif. Silakan hubungi administrator.'),
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
 

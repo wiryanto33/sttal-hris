@@ -52,14 +52,24 @@ class SetingController extends Controller implements HasMiddleware
             'working_days' => 'required|array',
             'is_active' => 'boolean'
         ]);
+        // Normalize to H:i:s for DB consistency
+        $start = $request->input('start_time');
+        $end = $request->input('end_time');
+        if (preg_match('/^\d{2}:\d{2}$/', (string) $start)) {
+            $start .= ':00';
+        }
+        if (preg_match('/^\d{2}:\d{2}$/', (string) $end)) {
+            $end .= ':00';
+        }
+
         Seting::create([
             'name' => $request->name,
             'address' => $request->address,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'radius_meters' => $request->radius_meters,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'start_time' => $start,
+            'end_time' => $end,
             'working_days' => $request->working_days,
             'is_active' => $request->is_active ?? false
         ]);
@@ -114,14 +124,24 @@ class SetingController extends Controller implements HasMiddleware
 
         $seting = Seting::findOrFail($id);
 
+        // Normalize to H:i:s for DB consistency
+        $start = $request->input('start_time');
+        $end = $request->input('end_time');
+        if (preg_match('/^\d{2}:\d{2}$/', (string) $start)) {
+            $start .= ':00';
+        }
+        if (preg_match('/^\d{2}:\d{2}$/', (string) $end)) {
+            $end .= ':00';
+        }
+
         $seting->update([
             'name' => $request->name,
             'address' => $request->address,
             'latitude' => $request->latitude,
             'longitude' => $request->longitude,
             'radius_meters' => $request->radius_meters,
-            'start_time' => $request->start_time,
-            'end_time' => $request->end_time,
+            'start_time' => $start,
+            'end_time' => $end,
             'working_days' => $request->working_days ?? [],
             'is_active' => (bool)$request->is_active, // Explicit boolean casting
         ]);

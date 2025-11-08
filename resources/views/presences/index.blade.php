@@ -79,7 +79,11 @@
                         </div>
 
                         {{-- Map Container --}}
-                        <div id="map" style="height: 300px; margin-top: 20px; display: none;"></div>
+                        <style>
+                            #map { width: 100%; height: 360px; margin-top: 20px; display: none; }
+                            .leaflet-container { font: inherit; }
+                        </style>
+                        <div id="map"></div>
                     </div>
                 </div>
 
@@ -143,44 +147,75 @@
         </div>
     </div>
 
-    <script>
-        let map;
+    @push('styles')
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    @endpush
+
+    @push('scripts')
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js" defer></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+        <script>
+        let map = null;
         let userMarker;
         let locationMarker;
         let locationCircle;
         let userLat, userLng;
         let selectedLocation;
 
+        function ensureMap() {
+            const mapEl = document.getElementById('map');
+            if (!map) {
+                map = L.map(mapEl, { preferCanvas: true }).setView([-7.5360639, 112.7665045], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors',
+                    maxZoom: 19
+                }).addTo(map);
+            }
+            // Recalculate size after unhide
+            setTimeout(() => map.invalidateSize(), 50);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize map
-            map = L.map('map').setView([-7.5360639, 112.7665045], 13); // Default to Malang, East Java
-
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
-
-            // Event listeners
+            // Event listeners only; map is created lazily when needed
             document.getElementById('get-location-btn').addEventListener('click', getCurrentLocation);
             document.getElementById('location-select').addEventListener('change', onLocationSelect);
 
             const checkInBtn = document.getElementById('check-in-btn');
             const checkOutBtn = document.getElementById('check-out-btn');
 
-            if (checkInBtn) {
-                checkInBtn.addEventListener('click', checkIn);
-            }
+            if (checkInBtn) checkInBtn.addEventListener('click', checkIn);
+            if (checkOutBtn) checkOutBtn.addEventListener('click', checkOut);
 
-            if (checkOutBtn) {
-                checkOutBtn.addEventListener('click', checkOut);
+            // If a location is already selected (e.g., default/old value), render map accordingly
+            const select = document.getElementById('location-select');
+            if (select && select.value) {
+                onLocationSelect();
             }
         });
+
+        function showSuccess(text) {
+            if (window.Swal) {
+                return Swal.fire({ title: 'Berhasil', text, icon: 'success', timer: 1500, showConfirmButton: false });
+            }
+            alert(text || 'Success');
+            return Promise.resolve();
+        }
+
+        function showError(text) {
+            if (window.Swal) {
+                return Swal.fire({ title: 'Terjadi Kesalahan', text, icon: 'error' });
+            }
+            alert(text || 'Error');
+            return Promise.resolve();
+        }
 
         function getCurrentLocation() {
             console.log('getCurrentLocation called');
             const statusEl = document.getElementById('location-status');
             statusEl.textContent = 'Getting location...';
-
-            document.getElementById('map').style.display = 'block';
+            const mapEl = document.getElementById('map');
+            mapEl.style.display = 'block';
+            ensureMap();
 
 
             if (navigator.geolocation) {
@@ -191,7 +226,7 @@
 
                         statusEl.textContent = 'Location obtained';
                         statusEl.className = 'text-success ms-2';
-                        document.getElementById('map').style.display = 'block';
+                        mapEl.style.display = 'block';
 
                         updateMap();
                         checkLocationValidity();
@@ -219,7 +254,9 @@
                     radius: parseInt(option.dataset.radius)
                 };
 
-                document.getElementById('map').style.display = 'block';
+                const mapEl = document.getElementById('map');
+                mapEl.style.display = 'block';
+                ensureMap();
                 updateMap();
                 checkLocationValidity();
             } else {
@@ -312,7 +349,7 @@
 
         function checkIn() {
             if (!selectedLocation || !userLat || !userLng) {
-                alert('Please select a location and get your current position first.');
+                showError('Pilih lokasi dan ambil lokasi Anda terlebih dahulu.');
                 return;
             }
 
@@ -336,21 +373,20 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
-                        location.reload();
+                        showSuccess(data.message || 'Absensi berhasil dicatat.').then(() => location.reload());
                     } else {
-                        alert(data.message);
+                        showError(data.message || 'Check-in gagal.');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred during check-in.');
+                    showError('Terjadi kesalahan saat check-in.');
                 });
         }
 
         function checkOut() {
             if (!userLat || !userLng) {
-                alert('Please get your current position first.');
+                showError('Silakan ambil lokasi Anda terlebih dahulu.');
                 return;
             }
 
@@ -371,16 +407,16 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        alert(data.message);
-                        location.reload();
+                        showSuccess(data.message || 'Check-out berhasil.').then(() => location.reload());
                     } else {
-                        alert(data.message);
+                        showError(data.message || 'Check-out gagal.');
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('An error occurred during check-out.');
+                    showError('Terjadi kesalahan saat check-out.');
                 });
         }
-    </script>
+        </script>
+    @endpush
 @endsection

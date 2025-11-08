@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('mazer/dist/assets/extensions/simple-datatables/style.css') }}">
     <link rel="stylesheet" href="{{ asset('mazer/dist/assets/extensions/table-datatables/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    @stack('styles')
 
 </head>
 
@@ -78,6 +78,13 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item {{ request()->routeIs('profile.*') ? 'active' : '' }} ">
+                            <a href="{{ route('profile.edit') }}" class='sidebar-link'>
+                                <i class="bi bi-person-circle"></i>
+                                <span>Profile</span>
+                            </a>
+                        </li>
+
 
 
                         @can('view users')
@@ -85,24 +92,6 @@
                                 <a href="{{ route('users.index') }}" class='sidebar-link'>
                                     <i class="bi bi-people-fill"></i>
                                     <span>Users</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('view tasks')
-                            <li class="sidebar-item  {{ request()->routeIs('tasks.index') ? 'active' : '' }} ">
-                                <a href="{{ route('tasks.index') }}" class='sidebar-link'>
-                                    <i class="bi bi-list-task"></i>
-                                    <span>Management Tugas</span>
-                                </a>
-                            </li>
-                        @endcan
-
-                        @can('view departements')
-                            <li class="sidebar-item {{ request()->routeIs('departements.index') ? 'active' : '' }} ">
-                                <a href="{{ route('departements.index') }}" class='sidebar-link'>
-                                    <i class="bi bi-house-check"></i>
-                                    <span>Department</span>
                                 </a>
                             </li>
                         @endcan
@@ -136,6 +125,24 @@
                                 </ul>
                             </li>
                         @endcanany
+
+                        @can('view tasks')
+                            <li class="sidebar-item  {{ request()->routeIs('tasks.index') ? 'active' : '' }} ">
+                                <a href="{{ route('tasks.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-list-task"></i>
+                                    <span>Management Tugas</span>
+                                </a>
+                            </li>
+                        @endcan
+
+                        @can('view departements')
+                            <li class="sidebar-item {{ request()->routeIs('departements.index') ? 'active' : '' }} ">
+                                <a href="{{ route('departements.index') }}" class='sidebar-link'>
+                                    <i class="bi bi-house-check"></i>
+                                    <span>Department</span>
+                                </a>
+                            </li>
+                        @endcan
 
                         <li class="sidebar-item {{ request()->routeIs('presences.index') ? 'active' : '' }} ">
                             <a href="{{ route('presences.index') }}" class="sidebar-link">
@@ -219,7 +226,7 @@
     {{-- dibutuhkan untuk date --}}
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    
 
     <script>
         let date = flatpickr('.date', {

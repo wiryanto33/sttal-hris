@@ -85,17 +85,14 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="" class="form-label">Gender</label>
+                            <label for="gender" class="form-label">Gender</label>
                             <select name="gender" id="gender"
-                                class="form-control @error('gender') is-invalid
-                            @enderror">
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
+                                class="form-control @error('gender') is-invalid @enderror" required>
+                                <option value="male" {{ old('gender') === 'male' ? 'selected' : '' }}>Male</option>
+                                <option value="female" {{ old('gender') === 'female' ? 'selected' : '' }}>Female</option>
                             </select>
                             @error('gender')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
@@ -113,8 +110,8 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="" class="form-label">Address</label>
-                            <textarea name="address" class="form-control @error('address') is-invalid @enderror">{{ old('address') }}</textarea>
+                            <label for="address" class="form-label">Address</label>
+                            <textarea name="address" id="address" class="form-control @error('address') is-invalid @enderror" required>{{ old('address') }}</textarea>
                             @error('address')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -170,51 +167,46 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="" class="form-label">Department</label>
-                            <select name="departement_id" id=""
-                                class="form-control @error('departement_id') is-invalid
-                            @enderror">
+                            <label for="departement_id" class="form-label">Department</label>
+                            <select name="departement_id" id="departement_id"
+                                class="form-control @error('departement_id') is-invalid @enderror" required>
                                 <option value="">Select Departement</option>
                                 @foreach ($departements as $departement)
-                                    <option value="{{ $departement->id }}">{{ $departement->name }}</option>
+                                    <option value="{{ $departement->id }}" {{ old('departement_id') == $departement->id ? 'selected' : '' }}>
+                                        {{ $departement->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('departement_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="" class="form-label">Role</label>
-                            <select name="role_id" id=""
-                                class="form-control @error('role_id') is-invalid
-                            @enderror">
+                            <label for="role_id" class="form-label">Role</label>
+                            <select name="role_id" id="role_id"
+                                class="form-control @error('role_id') is-invalid @enderror" required>
                                 <option value="">Select Role</option>
                                 @foreach ($roles as $role)
-                                    <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                    <option value="{{ $role->id }}" {{ old('role_id') == $role->id ? 'selected' : '' }}>
+                                        {{ $role->name }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('role_id')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="" class="form-label">Status</label>
-                            <select name="status" id=""
-                                class="form-control @error('status') is-invalid
-                            @enderror">
-                                <option value="inactive">Inactive</option>
-                                <option value="active">Active</option>
+                            <label for="status" class="form-label">Status</label>
+                            <select name="status" id="status"
+                                class="form-control @error('status') is-invalid @enderror" required>
+                                <option value="inactive" {{ old('status', 'inactive') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>Active</option>
                             </select>
                             @error('status')
-                                <div class="invalid-feedback">
-                                    {{ $message }}
-                                </div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
