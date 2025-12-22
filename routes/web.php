@@ -63,6 +63,8 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('/task/{id}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
     Route::put('/task/{id}', [TaskController::class, 'update'])->name('tasks.update');
     Route::delete('/task/{id}/delete', [TaskController::class, 'destroy'])->name('tasks.destroy');
+    Route::get('/task/{id}/attachment', [TaskController::class, 'downloadAttachment'])->name('tasks.download_attachment');
+
 
     //handle Task
     Route::get('tasks/pending/{id}', [TaskController::class, 'pending'])->name('tasks.pending');
@@ -80,6 +82,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::get('reports', [AttendanceReportController::class, 'index'])->name('reports.index');
 
     Route::resource('/leave_requests', LeaveRequestController::class);
+    Route::get('/leave_requests/{id}/attachment', [LeaveRequestController::class, 'downloadAttachment'])->name('leave_requests.download_attachment');
 
     Route::patch('/leave_requests/{leave_request}/update-status', [LeaveRequestController::class, 'updateStatus'])
         ->name('leave_requests.update_status');

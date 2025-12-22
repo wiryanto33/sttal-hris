@@ -46,7 +46,15 @@ class PermissionSeeder extends Seeder
             'edit departments',
             'delete departments',
 
-            'view reports'
+            'view reports',
+
+            'view leave requests',
+            'create leave requests',
+            'edit leave requests',
+            'delete leave requests',
+            'update status leave requests',
+            'manage all leave requests',
+            'download attachment leave requests',
 
             // Tambahkan sesuai kebutuhan aplikasi
         ];

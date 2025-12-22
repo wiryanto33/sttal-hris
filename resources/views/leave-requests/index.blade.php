@@ -13,7 +13,11 @@
                 <div class="col-12 col-md-6 order-md-1 order-last">
                     <h3>Cuti/Izin</h3>
                     <p class="text-subtitle text-muted">
-                        {{ auth()->user()->hasRole('superadmin') ? 'Kelola Cuti/Izin Anggota' : 'Riwayat Cuti/Izin Anda' }}
+                        @can('manage all leave requests')
+                            Kelola Cuti/Izin Anggota
+                        @else
+                            Riwayat Cuti/Izin Anda
+                        @endcan
                     </p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
@@ -32,8 +36,8 @@
         </div>
 
         <section class="section">
-            {{-- Statistics Cards (for superadmin) --}}
-            @if (auth()->user()->hasRole('superadmin'))
+            {{-- Statistics Cards (for managers) --}}
+            @can('manage all leave requests')
                 <div class="row mb-4">
                     <div class="col-xl-3 col-md-6 col-sm-6">
                         <div class="card">
@@ -115,7 +119,7 @@
                         </div>
                     </div>
                 </div>
-            @endif
+            @endcan
 
             <div class="card">
                 <div class="card-header">
@@ -123,21 +127,21 @@
                         <h5 class="card-title mb-0">Data Cuti/Izin</h5>
                         <div class="d-flex gap-2">
                             {{-- Filter Status --}}
-                            @if (auth()->user()->hasRole('superadmin'))
+                            @can('manage all leave requests')
                                 <select id="statusFilter" class="form-select form-select-sm" style="width: auto;">
                                     <option value="">Semua Status</option>
                                     <option value="pending">Pending</option>
                                     <option value="approved">Approved</option>
                                     <option value="rejected">Rejected</option>
                                 </select>
-                            @endif
+                            @endcan
 
                             {{-- Create Button --}}
-                            @if (!auth()->user()->hasRole('superadmin') || auth()->user()->hasRole('superadmin'))
+                            @can('create leave requests')
                                 <a href="{{ route('leave_requests.create') }}" class="btn btn-primary btn-sm">
                                     <i class="bi bi-plus-circle"></i> Ajukan Cuti/Izin
                                 </a>
-                            @endif
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -161,7 +165,11 @@
                             <i class="bi bi-calendar-x display-1 text-muted"></i>
                             <h5 class="mt-3 text-muted">Belum Ada Data Cuti/Izin</h5>
                             <p class="text-muted">
-                                {{ auth()->user()->hasRole('superadmin') ? 'Belum ada pengajuan cuti/izin dari anggota.' : 'Anda belum pernah mengajukan cuti/izin.' }}
+                                @can('manage all leave requests')
+                                    Belum ada pengajuan cuti/izin dari anggota.
+                                @else
+                                    Anda belum pernah mengajukan cuti/izin.
+                                @endcan
                             </p>
                         </div>
                     @else
@@ -170,16 +178,15 @@
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>{{ auth()->user()->hasRole('superadmin') ? 'Pemohon' : 'Tanggal Pengajuan' }}
-                                        </th>
+                                        <th>@can('manage all leave requests')Pemohon @else Tanggal Pengajuan @endcan</th>
                                         <th>Periode Izin</th>
                                         <th>Total Hari</th>
                                         <th>Alasan</th>
                                         <th>Lampiran</th>
                                         <th>Status</th>
-                                        @if (auth()->user()->hasRole('superadmin'))
-                                            <th>Catatan superadmin</th>
-                                        @endif
+                                        @can('manage all leave requests')
+                                            <th>Catatan Admin</th>
+                                        @endcan
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
@@ -190,7 +197,7 @@
 
                                             {{-- User Info or Request Date --}}
                                             <td>
-                                                @if (auth()->user()->hasRole('superadmin'))
+                                                @can('manage all leave requests')
                                                     <div class="d-flex align-items-center">
                                                         @if ($leaveRequest->user->profile_image)
                                                             <img src="{{ asset('storage/' . $leaveRequest->user->profile_image) }}"
@@ -217,7 +224,7 @@
                                                         </div>
                                                         <small class="text-muted">Tanggal pengajuan</small>
                                                     </div>
-                                                @endif
+                                                @endcan
                                             </td>
 
                                             {{-- Leave Period --}}
@@ -254,8 +261,8 @@
                                             {{-- Attachment --}}
                                             <td>
                                                 @if ($leaveRequest->attachment)
-                                                    <a href="{{ asset('storage/' . $leaveRequest->attachment) }}"
-                                                        target="_blank" class="btn btn-sm btn-outline-secondary">
+                                                    <a href="{{ route('leave_requests.download_attachment', $leaveRequest->id) }}"
+                                                        class="btn btn-sm btn-outline-secondary">
                                                         <i class="bi bi-download me-1"></i>Download
                                                     </a>
                                                 @else
@@ -286,19 +293,19 @@
                                                 @endswitch
                                             </td>
 
-                                            {{-- superadmin Notes (for superadmin only) --}}
-                                            @if (auth()->user()->hasRole('superadmin'))
+                                            {{-- Admin Notes (for manager only) --}}
+                                            @can('manage all leave requests')
                                                 <td>
-                                                    @if ($leaveRequest->superadmin_notes)
+                                                    @if ($leaveRequest->admin_notes)
                                                         <span class="text-muted" data-bs-toggle="tooltip"
-                                                            title="{{ $leaveRequest->superadmin_notes }}">
-                                                            {{ Str::limit($leaveRequest->superadmin_notes, 30) }}
+                                                            title="{{ $leaveRequest->admin_notes }}">
+                                                            {{ Str::limit($leaveRequest->admin_notes, 30) }}
                                                         </span>
                                                     @else
                                                         <span class="text-muted">-</span>
                                                     @endif
                                                 </td>
-                                            @endif
+                                            @endcan
 
                                             {{-- Actions --}}
                                             <td>
@@ -310,8 +317,8 @@
                                                         <i class="bi bi-eye"></i>
                                                     </button>
 
-                                                    @if (auth()->user()->hasRole('superadmin'))
-                                                        {{-- superadmin Actions --}}
+                                                    @can('manage all leave requests')
+                                                        {{-- Manager Actions --}}
                                                         @if ($leaveRequest->status === 'pending')
                                                             <button type="button" class="btn btn-sm btn-success"
                                                                 onclick="updateStatus({{ $leaveRequest->id }}, 'approved')">
@@ -346,7 +353,7 @@
                                                                 <i class="bi bi-trash"></i>
                                                             </button>
                                                         @endif
-                                                    @endif
+                                                    @endcan
                                                 </div>
                                             </td>
                                         </tr>
@@ -417,12 +424,12 @@
                                                                 </div>
                                                             </div>
                                                         @endif
-                                                        @if ($leaveRequest->superadmin_notes)
+                                                        @if ($leaveRequest->admin_notes)
                                                             <hr>
                                                             <div class="row">
                                                                 <div class="col-12">
-                                                                    <strong>Catatan superadmin:</strong><br>
-                                                                    {{ $leaveRequest->superadmin_notes }}
+                                                                    <strong>Catatan Admin:</strong><br>
+                                                                    {{ $leaveRequest->admin_notes }}
                                                                 </div>
                                                             </div>
                                                         @endif
@@ -441,8 +448,8 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         @if ($leaveRequest->attachment)
-                                                            <a href="{{ asset('storage/' . $leaveRequest->attachment) }}"
-                                                                target="_blank" class="btn btn-secondary me-auto">
+                                                            <a href="{{ route('leave_requests.download_attachment', $leaveRequest->id) }}"
+                                                                class="btn btn-secondary me-auto">
                                                                 <i class="bi bi-download"></i> Download Lampiran
                                                             </a>
                                                         @endif
@@ -463,7 +470,7 @@
     </div>
 
     {{-- Status Update Modal --}}
-    @if (auth()->user()->hasRole('superadmin'))
+    @can('manage all leave requests')
         <div class="modal fade" id="statusUpdateModal" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -483,8 +490,8 @@
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="superadmin_notes" class="form-label">Catatan superadmin</label>
-                                <textarea name="superadmin_notes" id="superadminNotes" class="form-control" rows="3"
+                                <label for="admin_notes" class="form-label">Catatan Admin</label>
+                                <textarea name="admin_notes" id="adminNotes" class="form-control" rows="3"
                                     placeholder="Berikan catatan untuk keputusan ini..."></textarea>
                             </div>
                         </div>
@@ -496,7 +503,7 @@
                 </div>
             </div>
         </div>
-    @endif
+    @endcan
 
     {{-- Delete Confirmation Modal --}}
     <div class="modal fade" id="deleteModal" tabindex="-1">
@@ -541,10 +548,8 @@
         });
 
         // Update status function
-        // Update status function - replace the existing one in your blade template
         function updateStatus(leaveRequestId, status) {
             document.getElementById('statusSelect').value = status;
-            // Use the correct route name with Laravel's route helper
             document.getElementById('statusUpdateForm').action = `/leave_requests/${leaveRequestId}/update-status`;
 
             const modal = new bootstrap.Modal(document.getElementById('statusUpdateModal'));
@@ -553,7 +558,8 @@
 
         // Confirm delete function
         function confirmDelete(leaveRequestId) {
-            document.getElementById('deleteForm').action = `/leave-requests/${leaveRequestId}`;
+            // Use Laravel's route helper for better route management
+            document.getElementById('deleteForm').action = `{{ url('/leave_requests') }}/${leaveRequestId}`;
 
             const modal = new bootstrap.Modal(document.getElementById('deleteModal'));
             modal.show();

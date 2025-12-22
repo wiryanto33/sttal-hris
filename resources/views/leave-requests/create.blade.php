@@ -13,7 +13,11 @@
                 <div class="col-12 col-md-6 order-md-1 order-last">
                     <h3>Leave Request</h3>
                     <p class="text-subtitle text-muted">
-                        {{ auth()->user()->hasRole('superadmin') ? 'Kelola Leave Request' : 'Buat Leave Request' }}
+                        @can('manage all leave requests')
+                            Kelola Leave Request
+                        @else
+                            Buat Leave Request
+                        @endcan
                     </p>
                 </div>
                 <div class="col-12 col-md-6 order-md-2 order-first">
@@ -43,8 +47,8 @@
                     <form action="{{ route('leave_requests.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
 
-                        {{-- User field - only show for superadmin --}}
-                        @if (auth()->user()->hasRole('superadmin'))
+                        {{-- User field - only show for managers --}}
+                        @can('manage all leave requests')
                             <div class="mb-3">
                                 <label for="user_id" class="form-label">User <span class="text-danger">*</span></label>
                                 <select name="user_id" id="user_id"
@@ -70,7 +74,7 @@
                                 <label class="form-label">Pemohon</label>
                                 <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
                             </div>
-                        @endif
+                        @endcan
 
                         <div class="mb-3">
                             <label for="reason" class="form-label">Alasan Izin <span class="text-danger">*</span></label>
@@ -166,8 +170,8 @@
                             @enderror
                         </div>
 
-                        {{-- Status field - only show for superadmin --}}
-                        @if (auth()->user()->hasRole('superadmin'))
+                        {{-- Status field - only show for managers --}}
+                        @can('manage all leave requests')
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status</label>
                                 <select name="status" id="status"
@@ -186,12 +190,12 @@
                                 @enderror
                             </div>
 
-                            {{-- superadmin notes field --}}
-                            <div class="mb-3" id="superadmin-notes-field" style="display: none;">
-                                <label for="superadmin_notes" class="form-label">Catatan superadmin</label>
-                                <textarea name="superadmin_notes" id="superadmin_notes" class="form-control @error('superadmin_notes') is-invalid @enderror"
-                                    rows="3" placeholder="Berikan catatan untuk keputusan ini...">{{ old('superadmin_notes') }}</textarea>
-                                @error('superadmin_notes')
+                            {{-- admin notes field --}}
+                            <div class="mb-3" id="admin-notes-field" style="display: none;">
+                                <label for="admin_notes" class="form-label">Catatan Admin</label>
+                                <textarea name="admin_notes" id="admin_notes" class="form-control @error('admin_notes') is-invalid @enderror"
+                                    rows="3" placeholder="Berikan catatan untuk keputusan ini...">{{ old('admin_notes') }}</textarea>
+                                @error('admin_notes')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -200,7 +204,7 @@
                         @else
                             {{-- Hidden status field for regular users --}}
                             <input type="hidden" name="status" value="pending">
-                        @endif
+                        @endcan
 
                         <div class="d-flex justify-content-between">
                             <a href="{{ route('leave_requests.index') }}" class="btn btn-secondary">
@@ -208,7 +212,11 @@
                             </a>
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-check-circle"></i>
-                                {{ auth()->user()->hasRole('superadmin') ? 'Simpan' : 'Ajukan Izin' }}
+                                @can('manage all leave requests')
+                                    Simpan
+                                @else
+                                    Ajukan Izin
+                                @endcan
                             </button>
                         </div>
                     </form>
@@ -223,7 +231,7 @@
             const reasonSelect = document.getElementById('reason');
             const customReasonField = document.getElementById('custom-reason-field');
             const statusSelect = document.getElementById('status');
-            const superadminNotesField = document.getElementById('superadmin-notes-field');
+            const adminNotesField = document.getElementById('admin-notes-field');
             const startDateInput = document.getElementById('start_date');
             const endDateInput = document.getElementById('end_date');
             const totalDaysInput = document.getElementById('total_days');
@@ -246,19 +254,19 @@
                 }
             }
 
-            // Show/hide superadmin notes field
+            // Show/hide admin notes field
             if (statusSelect) {
                 statusSelect.addEventListener('change', function() {
                     if (this.value === 'approved' || this.value === 'rejected') {
-                        superadminNotesField.style.display = 'block';
+                        adminNotesField.style.display = 'block';
                     } else {
-                        superadminNotesField.style.display = 'none';
+                        adminNotesField.style.display = 'none';
                     }
                 });
 
                 // Trigger on page load
                 if (statusSelect.value === 'approved' || statusSelect.value === 'rejected') {
-                    superadminNotesField.style.display = 'block';
+                    adminNotesField.style.display = 'block';
                 }
             }
 

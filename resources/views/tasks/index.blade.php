@@ -74,7 +74,7 @@
 
                                     <td>
                                         @if ($task->file)
-                                            <a href="{{ asset('storage/' . $task->file) }}" download
+                                            <a href="{{ route('tasks.download_attachment', $task->id) }}"
                                                 class="btn btn-sm btn-secondary">
                                                 Download
                                             </a>

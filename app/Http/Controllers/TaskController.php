@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Routing\Controllers\HasMiddleware;
 use Illuminate\Routing\Controllers\Middleware;
@@ -135,6 +136,24 @@ class TaskController extends Controller implements HasMiddleware
 
         return redirect()->route('tasks.index')->with('success', 'Task deleted successfully.');
     }
+
+    public function downloadAttachment($id)
+    {
+        $task = Task::findOrFail($id);
+
+        // Optional: Add authorization check to ensure the user can download this file
+        $user = Auth::user();
+        if (!$user->hasRole('superadmin') && $task->assigned_to !== $user->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($task->file && Storage::disk('public')->exists($task->file)) {
+            return Storage::disk('public')->download($task->file);
+        }
+
+        return redirect()->back()->with('error', 'File not found.');
+    }
+
 
 
 }
