@@ -32,7 +32,7 @@ class AttendanceReportController extends Controller implements HasMiddleware
         $status = $request->get('status');
 
         // Build query
-        $query = Presence::with('user')
+        $query = Presence::with(['user', 'location'])
             ->whereBetween('date', [$startDate, $endDate]);
 
         // Apply filters
@@ -87,7 +87,7 @@ class AttendanceReportController extends Controller implements HasMiddleware
         $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
         $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
 
-        $attendances = Presence::with('user')
+        $attendances = Presence::with(['user', 'location'])
             ->whereBetween('date', [$startDate, $endDate])
             ->orderBy('date', 'desc')
             ->get();
