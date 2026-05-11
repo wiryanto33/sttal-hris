@@ -67,4 +67,9 @@ class User extends Authenticatable
     {
         return $this->presences()->whereDate('date', today())->first();
     }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
+    }
 }

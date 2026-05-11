@@ -22,5 +22,19 @@ class AppServiceProvider extends ServiceProvider
         Gate::before(function ($user, $ability) {
             return $user->hasRole('superadmin') ? true : null;
         });
+
+        view()->composer('*', function ($view) {
+            if (auth()->check()) {
+                $user = auth()->user();
+                
+                if ($user->hasRole('superadmin')) {
+                    $count = \App\Models\Task::where('status', '!=', 'selesai')->count();
+                } else {
+                    $count = $user->tasks()->where('status', '!=', 'selesai')->count();
+                }
+                
+                $view->with('pendingTasksCount', $count);
+            }
+        });
     }
 }

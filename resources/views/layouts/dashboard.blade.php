@@ -131,6 +131,10 @@
                                 <a href="{{ route('tasks.index') }}" class='sidebar-link'>
                                     <i class="bi bi-list-task"></i>
                                     <span>Management Tugas</span>
+                                    @if (isset($pendingTasksCount) && $pendingTasksCount > 0)
+                                        <span class="badge bg-danger rounded-pill"
+                                            style="margin-left: auto;">{{ $pendingTasksCount }}</span>
+                                    @endif
                                 </a>
                             </li>
                         @endcan
