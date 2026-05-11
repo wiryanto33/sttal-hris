@@ -51,18 +51,20 @@
                             <div class="row mb-3">
                                 <div class="col-md-6">
                                     <select id="location-select" class="form-select mb-3">
-                                        <option value="">Pilih Lokasi</option>
+                                        @if ($locations->count() > 1)
+                                            <option value="">Pilih Lokasi</option>
+                                        @endif
                                         @foreach ($locations as $location)
                                             <option value="{{ $location->id }}" data-lat="{{ $location->latitude }}"
                                                 data-lng="{{ $location->longitude }}"
-                                                data-radius="{{ $location->radius_meters }}">
+                                                data-radius="{{ $location->radius_meters }}"
+                                                {{ $locations->count() == 1 ? 'selected' : '' }}>
                                                 {{ $location->name }}
                                             </option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <button id="get-location-btn" class="btn btn-info btn-sm">Ambil Lokasi Saya</button>
                                     <span id="location-status" class="text-muted ms-2"></span>
                                 </div>
 
@@ -177,7 +179,6 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // Event listeners only; map is created lazily when needed
-            document.getElementById('get-location-btn').addEventListener('click', getCurrentLocation);
             document.getElementById('location-select').addEventListener('change', onLocationSelect);
 
             const checkInBtn = document.getElementById('check-in-btn');
@@ -191,6 +192,9 @@
             if (select && select.value) {
                 onLocationSelect();
             }
+
+            // Auto detect location on load
+            getCurrentLocation();
         });
 
         function showSuccess(text) {
@@ -274,7 +278,16 @@
             if (userMarker) map.removeLayer(userMarker);
 
             // Add location marker and radius
-            locationMarker = L.marker([selectedLocation.lat, selectedLocation.lng])
+            locationMarker = L.marker([selectedLocation.lat, selectedLocation.lng], {
+                icon: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-gold.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            })
                 .addTo(map)
                 .bindPopup('Office Location');
 
@@ -325,8 +338,8 @@
             if (userMarker) {
                 userMarker.setIcon(L.icon({
                     iconUrl: isValid ?
-                        'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png' :
-                        'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                        'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png' :
+                        'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
                     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
                     iconSize: [25, 41],
                     iconAnchor: [12, 41],
