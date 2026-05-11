@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-12">
                 <div class="page-title-box">
-                    <h4 class="page-title">Laporan Absensi</h4>
+                    <h4 class="page-title">Laporan Presensi</h4>
                     <div class="page-title-right">
                         <ol class="breadcrumb m-0">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
@@ -83,7 +83,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center">
                             <div class="flex-grow-1">
-                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Absensi Persentase</span>
+                                <span class="text-muted mb-3 lh-1 d-block text-truncate">Presensi Persentase</span>
                                 <h4 class="mb-3 text-info">{{ $summary['present_percentage'] }}%</h4>
                             </div>
                             <div class="flex-shrink-0">
@@ -241,7 +241,7 @@
                                                 <div class="d-flex flex-column align-items-center">
                                                     <i
                                                         class="mdi mdi-clipboard-text-outline font-size-48 text-muted mb-2"></i>
-                                                    <p class="text-muted mb-0">tidak ada data absensi</p>
+                                                    <p class="text-muted mb-0">tidak ada data presensi</p>
                                                 </div>
                                             </td>
                                         </tr>

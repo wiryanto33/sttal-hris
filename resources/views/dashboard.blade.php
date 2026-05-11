@@ -97,7 +97,7 @@
                     <div class="col-12">
                         <div class="card">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h4 class="mb-0">Monitoring Absensi Bulanan</h4>
+                                <h4 class="mb-0">Monitoring Presensi Bulanan</h4>
                                 <span class="text-muted small">{{ $attendanceChart['title'] ?? '' }}</span>
                             </div>
                             <div class="card-body">
@@ -160,7 +160,7 @@
                 </div>
                 <div class="card mt-3">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h4 class="mb-0">Ringkasan Absensi</h4>
+                        <h4 class="mb-0">Ringkasan Presensi</h4>
                         <span class="text-muted small">{{ $todaySummary['title'] ?? '' }}</span>
                     </div>
                     <div class="card-body">
@@ -215,7 +215,7 @@
                 // Tampilkan pesan ringan jika semua nilai 0
                 const empty = document.createElement('div');
                 empty.className = 'text-center text-muted mt-3';
-                empty.innerText = 'Belum ada aktivitas absensi pada bulan ini';
+                empty.innerText = 'Belum ada aktivitas presensi pada bulan ini';
                 el.appendChild(empty);
             }
         }

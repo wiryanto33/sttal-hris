@@ -78,7 +78,7 @@ class DashboardController extends Controller
         }
 
         $attendanceChart = [
-            'title' => 'Absensi ' . now()->format('F Y'),
+            'title' => 'Presensi ' . now()->format('F Y'),
             'categories' => $categories,
             'series' => [
                 ['name' => 'Check-in', 'data' => $totalSeries],

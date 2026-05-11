@@ -5,12 +5,12 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12">
-                <h2>Absensi Saya</h2>
+                <h2>Presensi Saya</h2>
 
                 {{-- Check In/Out Section --}}
                 <div class="card mb-4">
                     <div class="card-header">
-                        <h5>Absensi Hari ini - {{ now()->format('F j, Y') }}</h5>
+                        <h5>Presensi Hari ini - {{ now()->format('F j, Y') }}</h5>
                     </div>
                     <div class="card-body">
                         <div id="presences-status">
@@ -43,7 +43,7 @@
                                     </div>
                                 </div>
                             @else
-                                <p>Tidak ada record absensi hari ini.</p>
+                                <p>Tidak ada record presensi hari ini.</p>
                             @endif
                         </div>
 
@@ -74,7 +74,7 @@
                             @elseif(!$todayPresence->check_out_time)
                                 <button id="check-out-btn" class="btn btn-danger">Check Out</button>
                             @else
-                                <p class="text-muted">Anda telah melakukan absensi hari ini.</p>
+                                <p class="text-muted">Anda telah melakukan presensi hari ini.</p>
                             @endif
                         </div>
 
@@ -90,7 +90,7 @@
                 {{-- presences History --}}
                 <div class="card">
                     <div class="card-header">
-                        <h5>Riwayat Absensi</h5>
+                        <h5>Riwayat Presensi</h5>
                     </div>
                     <div class="card-body">
                         <div class="table-responsive">
@@ -133,7 +133,7 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="6" class="text-center">Tidak ada riwayat absensi.</td>
+                                            <td colspan="6" class="text-center">Tidak ada riwayat presensi.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
@@ -373,7 +373,7 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        showSuccess(data.message || 'Absensi berhasil dicatat.').then(() => location.reload());
+                        showSuccess(data.message || 'Presensi berhasil dicatat.').then(() => location.reload());
                     } else {
                         showError(data.message || 'Check-in gagal.');
                     }

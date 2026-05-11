@@ -151,7 +151,7 @@
                         <li class="sidebar-item {{ request()->routeIs('presences.index') ? 'active' : '' }} ">
                             <a href="{{ route('presences.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check-fill"></i>
-                                <span>Absensi</span>
+                                <span>Presensi</span>
                             </a>
                         </li>
 
@@ -159,7 +159,7 @@
                             <li class="sidebar-item {{ request()->routeIs('reports.index') ? 'active' : '' }} ">
                                 <a href="{{ route('reports.index') }}" class="sidebar-link">
                                     <i class="bi bi-card-checklist"></i>
-                                    <span>Rekap Absensi</span>
+                                    <span>Rekap Presensi</span>
                                 </a>
                             </li>
                         @endcan
